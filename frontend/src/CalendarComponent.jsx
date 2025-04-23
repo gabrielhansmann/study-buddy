@@ -1,8 +1,9 @@
 /* CalendarComponent.jsx */
-import { Calendar, dateFnsLocalizer } from "react-big-calendar";
+import { Calendar, dateFnsLocalizer, Views } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { format, parse, startOfWeek, getDay } from "date-fns";
 import enUS from "date-fns/locale/en-US";
+import { useState } from "react";
 
 const locales = {
   "en-US": enUS,
@@ -60,16 +61,64 @@ const CustomEvent = ({ event }) => {
   );
 };
 
+const getFormattedDate = (date, view) => {
+  switch (view) {
+    case "month":
+      return format(date, "MMMM yyyy");
+    case "day":
+      return format(date, "d. MMMM yyyy");
+    case "week":
+    default:
+      return format(date, "d. MMMM yyyy");
+  }
+};
+
 export default function CalendarComponent() {
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentView, setCurrentView] = useState(Views.WEEK);
+
   return (
-    <div style={{ height: "75vh" }}>
+    <div style={{ height: "80vh" }}>
+      <div
+        style={{
+          marginBottom: "1rem",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <div
+          style={{ fontSize: "1.125rem", fontWeight: 500, color: "#111827" }}
+        >
+          {getFormattedDate(currentDate, currentView)}
+        </div>
+        <div>
+          <button onClick={() => setCurrentView(Views.DAY)} style={buttonStyle}>
+            Day
+          </button>
+          <button
+            onClick={() => setCurrentView(Views.WEEK)}
+            style={buttonStyle}
+          >
+            Week
+          </button>
+          <button
+            onClick={() => setCurrentView(Views.MONTH)}
+            style={buttonStyle}
+          >
+            Month
+          </button>
+        </div>
+      </div>
       <Calendar
         localizer={localizer}
         events={events}
         startAccessor="start"
         endAccessor="end"
-        defaultView="week"
-        views={["week"]}
+        defaultView={Views.WEEK}
+        view={currentView}
+        onView={(view) => setCurrentView(view)}
+        views={["day", "week", "month"]}
         toolbar={false}
         components={{ event: CustomEvent }}
         style={{
@@ -77,8 +126,20 @@ export default function CalendarComponent() {
           border: "1px solid #e5e7eb",
           borderRadius: "12px",
         }}
+        date={currentDate}
+        onNavigate={(newDate) => setCurrentDate(newDate)}
         dayLayoutAlgorithm="no-overlap"
       />
     </div>
   );
 }
+
+const buttonStyle = {
+  backgroundColor: "#f3f4f6",
+  border: "1px solid #d1d5db",
+  borderRadius: "6px",
+  padding: "6px 12px",
+  marginLeft: "0.5rem",
+  fontWeight: 500,
+  cursor: "pointer",
+};
