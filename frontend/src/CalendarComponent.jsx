@@ -1,10 +1,15 @@
 /* CalendarComponent.jsx */
 import { Calendar, dateFnsLocalizer, Views } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { format, parse, startOfWeek, getDay } from "date-fns";
+import { format, parse, startOfWeek, getDay, getISOWeek } from "date-fns";
 import enUS from "date-fns/locale/en-US";
 import { useState } from "react";
-import { ToggleButtonGroup, ToggleButton } from "@mui/material";
+import {
+  ToggleButtonGroup,
+  ToggleButton,
+  ButtonGroup,
+  Button,
+} from "@mui/material";
 
 const locales = {
   "en-US": enUS,
@@ -69,6 +74,7 @@ const getFormattedDate = (date, view) => {
     case "day":
       return format(date, "d. MMMM yyyy");
     case "week":
+      return `KW ${getISOWeek(date)} – ${format(date, "MMMM yyyy")}`;
     default:
       return format(date, "d. MMMM yyyy");
   }
@@ -82,6 +88,23 @@ export default function CalendarComponent() {
     if (newView !== null) {
       setCurrentView(newView);
     }
+  };
+
+  const handleToday = () => setCurrentDate(new Date());
+  const handleNext = () => {
+    const next = new Date(currentDate);
+    if (currentView === Views.MONTH) next.setMonth(next.getMonth() + 1);
+    else if (currentView === Views.WEEK) next.setDate(next.getDate() + 7);
+    else next.setDate(next.getDate() + 1);
+    setCurrentDate(next);
+  };
+
+  const handleBack = () => {
+    const prev = new Date(currentDate);
+    if (currentView === Views.MONTH) prev.setMonth(prev.getMonth() - 1);
+    else if (currentView === Views.WEEK) prev.setDate(prev.getDate() - 7);
+    else prev.setDate(prev.getDate() - 1);
+    setCurrentDate(prev);
   };
 
   return (
@@ -99,17 +122,24 @@ export default function CalendarComponent() {
         >
           {getFormattedDate(currentDate, currentView)}
         </div>
-        <ToggleButtonGroup
-          value={currentView}
-          exclusive
-          onChange={handleViewChange}
-          size="small"
-          color="primary"
-        >
-          <ToggleButton value={Views.DAY}>Day</ToggleButton>
-          <ToggleButton value={Views.WEEK}>Week</ToggleButton>
-          <ToggleButton value={Views.MONTH}>Month</ToggleButton>
-        </ToggleButtonGroup>
+        <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+          <ButtonGroup variant="outlined" size="small">
+            <Button onClick={handleToday}>Today</Button>
+            <Button onClick={handleBack}>← Back</Button>
+            <Button onClick={handleNext}>Next →</Button>
+          </ButtonGroup>
+          <ToggleButtonGroup
+            value={currentView}
+            exclusive
+            onChange={handleViewChange}
+            size="small"
+            color="primary"
+          >
+            <ToggleButton value={Views.DAY}>Day</ToggleButton>
+            <ToggleButton value={Views.WEEK}>Week</ToggleButton>
+            <ToggleButton value={Views.MONTH}>Month</ToggleButton>
+          </ToggleButtonGroup>
+        </div>
       </div>
       <Calendar
         localizer={localizer}
