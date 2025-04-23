@@ -21,8 +21,34 @@ const GetStarted = () => {
       university: "",
       files: [],
     },
-    onSubmit: (values) => {
-      console.log("Submitted:", values);
+    onSubmit: async (values) => {
+      const formData = new FormData();
+      formData.append("university", values.university);
+
+      if (values.files.length > 0) {
+        formData.append("file", values.files[0]); // Nur erste Datei wird gesendet
+      } else {
+        alert("Bitte lade mindestens eine Datei hoch.");
+        return;
+      }
+
+      try {
+        const response = await fetch("http://localhost:8000/get-started/", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error("Upload fehlgeschlagen");
+        }
+
+        const result = await response.json();
+        console.log("Upload erfolgreich:", result);
+        alert("Upload erfolgreich!");
+      } catch (error) {
+        console.error("Fehler beim Upload:", error);
+        alert("Fehler beim Upload.");
+      }
     },
   });
 
@@ -82,7 +108,7 @@ const GetStarted = () => {
           </label>
         </Paper>
 
-        {/* File list */}
+        {/* Liste der ausgewählten Dateien */}
         <List dense sx={{ mt: 2 }}>
           {formik.values.files.map((file, index) => (
             <ListItem key={index}>
