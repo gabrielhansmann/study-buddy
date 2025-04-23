@@ -72,11 +72,11 @@ const getFormattedDate = (date, view) => {
     case "month":
       return format(date, "MMMM yyyy");
     case "day":
-      return format(date, "d. MMMM yyyy");
+      return format(date, "MMMM do, yyyy");
     case "week":
       return `KW ${getISOWeek(date)} – ${format(date, "MMMM yyyy")}`;
     default:
-      return format(date, "d. MMMM yyyy");
+      return format(date, "MMMM do, yyyy");
   }
 };
 
