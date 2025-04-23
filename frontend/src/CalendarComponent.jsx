@@ -4,6 +4,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import { format, parse, startOfWeek, getDay } from "date-fns";
 import enUS from "date-fns/locale/en-US";
 import { useState } from "react";
+import { ButtonGroup, Button } from "@mui/material";
 
 const locales = {
   "en-US": enUS,
@@ -92,23 +93,11 @@ export default function CalendarComponent() {
         >
           {getFormattedDate(currentDate, currentView)}
         </div>
-        <div>
-          <button onClick={() => setCurrentView(Views.DAY)} style={buttonStyle}>
-            Day
-          </button>
-          <button
-            onClick={() => setCurrentView(Views.WEEK)}
-            style={buttonStyle}
-          >
-            Week
-          </button>
-          <button
-            onClick={() => setCurrentView(Views.MONTH)}
-            style={buttonStyle}
-          >
-            Month
-          </button>
-        </div>
+        <ButtonGroup variant="outlined" size="small">
+          <Button onClick={() => setCurrentView(Views.DAY)}>Day</Button>
+          <Button onClick={() => setCurrentView(Views.WEEK)}>Week</Button>
+          <Button onClick={() => setCurrentView(Views.MONTH)}>Month</Button>
+        </ButtonGroup>
       </div>
       <Calendar
         localizer={localizer}
@@ -133,13 +122,3 @@ export default function CalendarComponent() {
     </div>
   );
 }
-
-const buttonStyle = {
-  backgroundColor: "#f3f4f6",
-  border: "1px solid #d1d5db",
-  borderRadius: "6px",
-  padding: "6px 12px",
-  marginLeft: "0.5rem",
-  fontWeight: 500,
-  cursor: "pointer",
-};
