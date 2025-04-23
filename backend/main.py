@@ -17,10 +17,12 @@ app.add_middleware(
 
 
 @app.post("/get-started/")
-async def upload_data(university: str = Form(...), file: UploadFile = File(...)):
-    contents = await file.read()
-    # Save or process data and uni
-    return {"filename": file.filename, "university": university}
+async def upload_data(university: str = Form(...), files: List[UploadFile] = File(...)):
+    uploaded_files = []
+    for file in files:
+        await file.read()
+        uploaded_files.append(file.filename)
+    return {"uploaded_files": uploaded_files, "university": university}
 
 
 UPLOAD_DIR = "tmp"

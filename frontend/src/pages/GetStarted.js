@@ -25,12 +25,15 @@ const GetStarted = () => {
       const formData = new FormData();
       formData.append("university", values.university);
 
-      if (values.files.length > 0) {
-        formData.append("file", values.files[0]); // Nur erste Datei wird gesendet
-      } else {
+      if (values.files.length === 0) {
         alert("Bitte lade mindestens eine Datei hoch.");
         return;
       }
+
+      // Append all files with same key (files)
+      values.files.forEach((file) => {
+        formData.append("files", file);
+      });
 
       try {
         const response = await fetch("http://localhost:8000/get-started/", {
