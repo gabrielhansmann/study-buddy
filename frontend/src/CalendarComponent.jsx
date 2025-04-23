@@ -117,30 +117,37 @@ export default function CalendarComponent() {
           alignItems: "center",
         }}
       >
+        <ButtonGroup variant="outlined" size="small">
+          <Button onClick={handleBack}>← Back</Button>
+          <Button onClick={handleToday}>Today</Button>
+          <Button onClick={handleNext}>Next →</Button>
+        </ButtonGroup>
+
         <div
-          style={{ fontSize: "1.125rem", fontWeight: 500, color: "#111827" }}
+          style={{
+            fontSize: "1.125rem",
+            fontWeight: 500,
+            color: "#111827",
+            textAlign: "center",
+            flex: 1,
+          }}
         >
           {getFormattedDate(currentDate, currentView)}
         </div>
-        <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-          <ButtonGroup variant="outlined" size="small">
-            <Button onClick={handleToday}>Today</Button>
-            <Button onClick={handleBack}>← Back</Button>
-            <Button onClick={handleNext}>Next →</Button>
-          </ButtonGroup>
-          <ToggleButtonGroup
-            value={currentView}
-            exclusive
-            onChange={handleViewChange}
-            size="small"
-            color="primary"
-          >
-            <ToggleButton value={Views.DAY}>Day</ToggleButton>
-            <ToggleButton value={Views.WEEK}>Week</ToggleButton>
-            <ToggleButton value={Views.MONTH}>Month</ToggleButton>
-          </ToggleButtonGroup>
-        </div>
+
+        <ToggleButtonGroup
+          value={currentView}
+          exclusive
+          onChange={handleViewChange}
+          size="small"
+          color="primary"
+        >
+          <ToggleButton value={Views.DAY}>Day</ToggleButton>
+          <ToggleButton value={Views.WEEK}>Week</ToggleButton>
+          <ToggleButton value={Views.MONTH}>Month</ToggleButton>
+        </ToggleButtonGroup>
       </div>
+
       <Calendar
         localizer={localizer}
         events={events}
