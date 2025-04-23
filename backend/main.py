@@ -1,3 +1,4 @@
+import asyncio
 from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -22,6 +23,7 @@ async def upload_data(university: str = Form(...), files: List[UploadFile] = Fil
     for file in files:
         await file.read()
         uploaded_files.append(file.filename)
+    await asyncio.sleep(10)
     return {"uploaded_files": uploaded_files, "university": university}
 
 
