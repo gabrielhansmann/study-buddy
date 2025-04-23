@@ -11,11 +11,17 @@ import {
   ListItem,
   ListItemText,
   ListItemSecondaryAction,
+  CircularProgress,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useFormik } from "formik";
+import { useNavigate } from "react-router-dom";
 
 const GetStarted = () => {
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [success, setSuccess] = React.useState(false);
+  const navigate = useNavigate();
+
   const formik = useFormik({
     initialValues: {
       university: "",
@@ -30,10 +36,12 @@ const GetStarted = () => {
         return;
       }
 
-      // Append all files with same key (files)
       values.files.forEach((file) => {
         formData.append("files", file);
       });
+
+      setIsLoading(true);
+      setSuccess(false);
 
       try {
         const response = await fetch("http://localhost:8000/get-started/", {
@@ -45,12 +53,13 @@ const GetStarted = () => {
           throw new Error("Upload fehlgeschlagen");
         }
 
-        const result = await response.json();
-        console.log("Upload erfolgreich:", result);
-        alert("Upload erfolgreich!");
+        await response.json();
+        setSuccess(true);
       } catch (error) {
         console.error("Fehler beim Upload:", error);
         alert("Fehler beim Upload.");
+      } finally {
+        setIsLoading(false);
       }
     },
   });
@@ -76,59 +85,80 @@ const GetStarted = () => {
         relevant documents.
       </Typography>
 
-      <form onSubmit={formik.handleSubmit}>
-        <TextField
-          select
-          fullWidth
-          label="Select university"
-          name="university"
-          value={formik.values.university}
-          onChange={formik.handleChange}
-          sx={{ mt: 3 }}
-        >
-          <MenuItem value="Koblenz University">Universität Koblenz</MenuItem>
-          <MenuItem value="Mannheim University">Universität Mannheim</MenuItem>
-        </TextField>
+      {isLoading ? (
+        <CircularProgress sx={{ mt: 4 }} />
+      ) : success ? (
+        <>
+          <Typography variant="h6" sx={{ mt: 4 }}>
+            Successful Upload!
+          </Typography>
+          <Button
+            variant="contained"
+            sx={{ mt: 2 }}
+            onClick={() => navigate("/")}
+          >
+            Continue
+          </Button>
+        </>
+      ) : (
+        <form onSubmit={formik.handleSubmit}>
+          <TextField
+            select
+            fullWidth
+            label="Select university"
+            name="university"
+            value={formik.values.university}
+            onChange={formik.handleChange}
+            sx={{ mt: 3 }}
+          >
+            <MenuItem value="Koblenz University">Universität Koblenz</MenuItem>
+            <MenuItem value="Mannheim University">
+              Universität Mannheim
+            </MenuItem>
+          </TextField>
 
-        <Paper
-          variant="outlined"
-          sx={{
-            mt: 3,
-            p: 4,
-            borderStyle: "dashed",
-            textAlign: "center",
-          }}
-        >
-          <input
-            type="file"
-            multiple
-            onChange={handleFileChange}
-            style={{ display: "none" }}
-            id="upload-file"
-          />
-          <label htmlFor="upload-file">
-            <Button component="span">Drag and drop or click to upload</Button>
-          </label>
-        </Paper>
+          <Paper
+            variant="outlined"
+            sx={{
+              mt: 3,
+              p: 4,
+              borderStyle: "dashed",
+              textAlign: "center",
+            }}
+          >
+            <input
+              type="file"
+              multiple
+              onChange={handleFileChange}
+              style={{ display: "none" }}
+              id="upload-file"
+            />
+            <label htmlFor="upload-file">
+              <Button component="span">Drag and drop or click to upload</Button>
+            </label>
+          </Paper>
 
-        {/* Liste der ausgewählten Dateien */}
-        <List dense sx={{ mt: 2 }}>
-          {formik.values.files.map((file, index) => (
-            <ListItem key={index}>
-              <ListItemText primary={file.name} />
-              <ListItemSecondaryAction>
-                <IconButton edge="end" onClick={() => handleFileRemove(index)}>
-                  <DeleteIcon />
-                </IconButton>
-              </ListItemSecondaryAction>
-            </ListItem>
-          ))}
-        </List>
+          <List dense sx={{ mt: 2 }}>
+            {formik.values.files.map((file, index) => (
+              <ListItem key={index}>
+                <ListItemText primary={file.name} />
+                <ListItemSecondaryAction>
+                  <IconButton
+                    edge="end"
+                    onClick={() => handleFileRemove(index)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              </ListItem>
+            ))}
+          </List>
 
-        <Button variant="contained" sx={{ mt: 4 }} type="submit">
-          Continue
-        </Button>
-      </form>
+          <Button variant="contained" sx={{ mt: 4 }} type="submit">
+            Continue
+          </Button>
+        </form>
+      )}
     </Box>
   );
 };
