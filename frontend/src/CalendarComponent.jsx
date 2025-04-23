@@ -4,7 +4,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import { format, parse, startOfWeek, getDay } from "date-fns";
 import enUS from "date-fns/locale/en-US";
 import { useState } from "react";
-import { ButtonGroup, Button } from "@mui/material";
+import { ToggleButtonGroup, ToggleButton } from "@mui/material";
 
 const locales = {
   "en-US": enUS,
@@ -78,6 +78,12 @@ export default function CalendarComponent() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [currentView, setCurrentView] = useState(Views.WEEK);
 
+  const handleViewChange = (event, newView) => {
+    if (newView !== null) {
+      setCurrentView(newView);
+    }
+  };
+
   return (
     <div style={{ height: "80vh" }}>
       <div
@@ -93,11 +99,17 @@ export default function CalendarComponent() {
         >
           {getFormattedDate(currentDate, currentView)}
         </div>
-        <ButtonGroup variant="outlined" size="small">
-          <Button onClick={() => setCurrentView(Views.DAY)}>Day</Button>
-          <Button onClick={() => setCurrentView(Views.WEEK)}>Week</Button>
-          <Button onClick={() => setCurrentView(Views.MONTH)}>Month</Button>
-        </ButtonGroup>
+        <ToggleButtonGroup
+          value={currentView}
+          exclusive
+          onChange={handleViewChange}
+          size="small"
+          color="primary"
+        >
+          <ToggleButton value={Views.DAY}>Day</ToggleButton>
+          <ToggleButton value={Views.WEEK}>Week</ToggleButton>
+          <ToggleButton value={Views.MONTH}>Month</ToggleButton>
+        </ToggleButtonGroup>
       </div>
       <Calendar
         localizer={localizer}
