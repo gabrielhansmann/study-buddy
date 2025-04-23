@@ -1,10 +1,27 @@
 from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 import json
 import os
 
 app = FastAPI()
+
+# CORS erlauben für localhost:3000 (React)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+@app.post("/get-started/")
+async def upload_data(university: str = Form(...), file: UploadFile = File(...)):
+    contents = await file.read()
+    # Save or process data and uni
+    return {"filename": file.filename, "university": university}
+
 
 UPLOAD_DIR = "tmp"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
