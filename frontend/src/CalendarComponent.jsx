@@ -18,49 +18,66 @@ const localizer = dateFnsLocalizer({
 
 const events = [
   {
-    title: "Deep Work Block",
-    start: new Date(2025, 3, 24, 9, 0),
-    end: new Date(2025, 3, 24, 11, 0),
+    title: "Linear Algebra",
+    start: new Date(2025, 3, 21, 9, 0),
+    end: new Date(2025, 3, 21, 10, 0),
+    color: "#bfdbfe",
   },
   {
-    title: "Team Meeting",
-    start: new Date(2025, 3, 24, 14, 0),
-    end: new Date(2025, 3, 24, 15, 0),
+    title: "Computer Science",
+    start: new Date(2025, 3, 23, 11, 0),
+    end: new Date(2025, 3, 23, 12, 0),
+    color: "#bfdbfe",
+  },
+  {
+    title: "Computer Science",
+    start: new Date(2025, 3, 21, 13, 0),
+    end: new Date(2025, 3, 21, 14, 0),
+    color: "#bfdbfe",
+  },
+  {
+    title: "History",
+    start: new Date(2025, 3, 23, 14, 0),
+    end: new Date(2025, 3, 23, 15, 0),
+    color: "#e5e7eb",
   },
 ];
 
 const CustomEvent = ({ event }) => {
   return (
-    <div style={{ whiteSpace: "normal", wordWrap: "break-word" }}>
-      <strong>{event.title}</strong>
+    <div
+      style={{
+        padding: "6px 10px",
+        borderRadius: "12px",
+        fontSize: "0.85rem",
+        fontWeight: 500,
+        backgroundColor: event.color,
+        color: "#111827",
+      }}
+    >
+      {event.title}
     </div>
   );
 };
 
 export default function CalendarComponent() {
   return (
-    <div
-      style={{ height: "80vh", padding: "1rem", backgroundColor: "#1e1e1e" }}
-    >
+    <div style={{ height: "75vh" }}>
       <Calendar
         localizer={localizer}
         events={events}
         startAccessor="start"
         endAccessor="end"
         defaultView="week"
-        views={["week", "day", "agenda"]}
-        style={{ backgroundColor: "#2b2b2b", color: "white" }}
+        views={["week"]}
+        toolbar={false}
         components={{ event: CustomEvent }}
-        eventPropGetter={(event) => ({
-          style: {
-            backgroundColor: event.title.includes("Deep")
-              ? "#3b82f6"
-              : "#10b981",
-            color: "white",
-            borderRadius: "6px",
-            padding: "2px 4px",
-          },
-        })}
+        style={{
+          backgroundColor: "#ffffff",
+          border: "1px solid #e5e7eb",
+          borderRadius: "12px",
+        }}
+        dayLayoutAlgorithm="no-overlap"
       />
     </div>
   );
