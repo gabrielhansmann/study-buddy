@@ -1,5 +1,7 @@
-from fastapi import FastAPI, File, UploadFile, Form, BackgroundTasks, Depends
+import asyncio
+from fastapi import FastAPI, File, UploadFile, Form, BackgroundTasks
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 from pydantic import BaseModel
 import json
@@ -10,6 +12,25 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = FastAPI()
+
+# CORS erlauben für localhost:3000 (React)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+@app.post("/get-started/")
+async def upload_data(university: str = Form(...), files: List[UploadFile] = File(...)):
+    uploaded_files = []
+    for file in files:
+        await file.read()
+        uploaded_files.append(file.filename)
+    await asyncio.sleep(10)
+    return {"uploaded_files": uploaded_files, "university": university}
+
 
 UPLOAD_DIR = "tmp"
 os.makedirs(UPLOAD_DIR, exist_ok=True)

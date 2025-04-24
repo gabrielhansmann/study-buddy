@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# Setze Default-Port auf 8000, falls PORT nicht gesetzt ist
-: "${PORT:=5000}"
+# Set Default-Port to 8000, if PORT is not 
+: "${PORT:=8000}"
 
 uvicorn main:app --host 0.0.0.0 --port "$PORT"
 
