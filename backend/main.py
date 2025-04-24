@@ -37,8 +37,6 @@ async def receive_job_application(data: JobApplicationInput):
         "Frontend Developer bei TechCorp (Remote)",
         "Werkstudent Webentwicklung bei CodeBase",
         "React Engineer für HealthTech Startup",
-        "Softwareentwickler:in bei FinTech AG",
-        "Junior Fullstack Developer (FastAPI + React) bei DevWorks",
     ]
 
     return {
