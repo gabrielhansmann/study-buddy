@@ -23,6 +23,17 @@ app.add_middleware(
 )
 
 
+class JobApplicationInput(BaseModel):
+    message: str
+
+
+@app.post("/job-application/")
+async def receive_job_application(data: JobApplicationInput):
+    print(f"Job application received: {data.message}")
+    await asyncio.sleep(5)  # Wait for 5 seconds
+    return {"status": "received", "echo": data.message}
+
+
 @app.post("/get-started/")
 async def upload_data(university: str = Form(...), files: List[UploadFile] = File(...)):
     uploaded_files = []
@@ -35,7 +46,6 @@ async def upload_data(university: str = Form(...), files: List[UploadFile] = Fil
 
 UPLOAD_DIR = "tmp"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
-
 
 
 @app.post("/getstarted/pdf-geek/")
