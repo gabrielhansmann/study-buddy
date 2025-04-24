@@ -7,11 +7,11 @@ import sys
 from pathlib import Path
 
 def main():
-    url = "http://localhost:5000/getstarted/pdf-geek"
+    url = "http://localhost:8000/getstarted/pdf-geek"
     # Adjust these paths / filenames as needed
     files_to_send = [
         Path("data/cv_bsc_2019_curriculum.pdf"),
-        # Path("data/cv_bsc_2019_po.pdf"),
+        Path("data/cv_bsc_2019_po.pdf"),
     ]
 
     # Build metadata based on filenames

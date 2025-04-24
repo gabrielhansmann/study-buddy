@@ -8,6 +8,7 @@ backend/__pycache__
 backend/venv
 backend/.env
 backend/tmp
+backend/data
 
 # Vercel
 .vercel
