@@ -44,7 +44,9 @@ const GetStarted = () => {
       setSuccess(false);
 
       try {
-        const response = await fetch("http://localhost:8000/get-started/", {
+        const API_URL = process.env.REACT_APP_API_URL;
+
+        const response = await fetch(`${API_URL}/get-started/`, {
           method: "POST",
           body: formData,
         });
