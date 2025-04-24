@@ -30,8 +30,22 @@ class JobApplicationInput(BaseModel):
 @app.post("/job-application/")
 async def receive_job_application(data: JobApplicationInput):
     print(f"Job application received: {data.message}")
-    await asyncio.sleep(5)  # Wait for 5 seconds
-    return {"status": "received", "echo": data.message}
+    await asyncio.sleep(5)  # 5 Sekunden warten
+
+    # Simulierte Logik – hier später NLP / AI / DB einbauen
+    suggestions = [
+        "Frontend Developer bei TechCorp (Remote)",
+        "Werkstudent Webentwicklung bei CodeBase",
+        "React Engineer für HealthTech Startup",
+        "Softwareentwickler:in bei FinTech AG",
+        "Junior Fullstack Developer (FastAPI + React) bei DevWorks",
+    ]
+
+    return {
+        "message": "Thanks for your interest! Based on your input, here are some suggestions:",
+        "suggestions": suggestions,
+        "echo": data.message,
+    }
 
 
 @app.post("/get-started/")
