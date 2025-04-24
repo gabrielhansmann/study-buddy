@@ -23,7 +23,10 @@ export default function Layout() {
         <nav>
           <ul style={{ listStyle: "none", padding: 0 }}>
             <li style={{ marginBottom: "1rem" }}>
-              <a href="/" style={{ textDecoration: "none", color: "#111827" }}>
+              <a
+                href="/dashboard/"
+                style={{ textDecoration: "none", color: "#111827" }}
+              >
                 📊 Dashboard
               </a>
             </li>
@@ -33,19 +36,25 @@ export default function Layout() {
               }}
             >
               <a
-                href="/job-application"
+                href="/dashboard/job-application"
                 style={{ textDecoration: "none", color: "#111827" }}
               >
                 📄 Job Application
               </a>
             </li>
             <li style={{ marginBottom: "1rem" }}>
-              <a href="#" style={{ textDecoration: "none", color: "#111827" }}>
+              <a
+                href="/dashboard/#"
+                style={{ textDecoration: "none", color: "#111827" }}
+              >
                 ✅ To Do
               </a>
             </li>
             <li>
-              <a href="#" style={{ textDecoration: "none", color: "#111827" }}>
+              <a
+                href="/dashboard/#"
+                style={{ textDecoration: "none", color: "#111827" }}
+              >
                 ⚙️ Settings
               </a>
             </li>

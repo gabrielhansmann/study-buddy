@@ -11,10 +11,11 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Layout />}>
+        <Route path="/" element={<GetStarted />} />
+        <Route path="/dashboard" element={<Layout />}>
           <Route index element={<Dashboard />} />
           <Route path="job-application" element={<JobApplication />} />
-          <Route path="get-started" element={<GetStarted />} />
+
           <Route path="formik-example-page" element={<FormikExamplePage />} />
         </Route>
       </Routes>

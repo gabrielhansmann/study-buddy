@@ -112,7 +112,7 @@ const GetStarted = () => {
           <Button
             variant="contained"
             sx={{ mt: 2 }}
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/dashboard")}
           >
             Continue
           </Button>
