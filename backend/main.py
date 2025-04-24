@@ -1,5 +1,7 @@
-from fastapi import FastAPI, File, UploadFile, Form, BackgroundTasks, Depends
+import asyncio
+from fastapi import FastAPI, File, UploadFile, Form, BackgroundTasks
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 from pydantic import BaseModel
 import json
@@ -7,19 +9,45 @@ import os
 from form_recognition import process_upload
 
 from dotenv import load_dotenv
+
 load_dotenv()
 
 app = FastAPI()
 
+# CORS erlauben für localhost:3000 (React)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+@app.post("/get-started/")
+async def upload_data(university: str = Form(...), files: List[UploadFile] = File(...)):
+    uploaded_files = []
+    for file in files:
+        await file.read()
+        uploaded_files.append(file.filename)
+    await asyncio.sleep(10)
+    return {"uploaded_files": uploaded_files, "university": university}
+
+
 UPLOAD_DIR = "tmp"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
+
 
 @app.get("/health")
 async def health_check():
     return {"status": "ok"}
 
+
 @app.post("/getstarted/pdf-geek/")
-async def pdf_receive(background_process: BackgroundTasks, metadata: str = Form(...), files: List[UploadFile] = File(...)):
+async def pdf_receive(
+    background_process: BackgroundTasks,
+    metadata: str = Form(...),
+    files: List[UploadFile] = File(...),
+):
     try:
         # JSON-String zu Python-Dict konvertieren
         metadata_dict = json.loads(metadata)
