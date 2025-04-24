@@ -3,8 +3,12 @@ import os
 from azure.core.credentials import AzureKeyCredential
 from azure.ai.formrecognizer import DocumentAnalysisClient
 
-key = os.environ["AZURE_FORM_RECOGNIZER_API_KEY"]
-endpoint = os.environ["AZURE_FORM_RECOGNIZER_ENDPOINT"]
+from dotenv import load_dotenv
+load_dotenv()
+
+key = os.getenv("AZURE_FORM_RECOGNIZER_API_KEY")
+# key = os.environ(AZURE_FORM_RECOGNIZER_API_KEY)
+endpoint = os.getenv("AZURE_FORM_RECOGNIZER_ENDPOINT")
 
 credential = AzureKeyCredential(key)
 
@@ -25,5 +29,6 @@ def process_upload(filenames):
 
         extract_file_path = os.path.join(UPLOAD_DIR, f"{name}.extract")
         with open(extract_file_path, "w") as f:
-            for page in result.lines:
-                f.write(f"{page.text}\n")
+            for page in result.pages:
+                for line in page.lines:
+                    f.write(f"{line.content}\n")
