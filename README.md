@@ -34,4 +34,4 @@
 
 # and
 
-# python3 test_semantics
+# extract zip to backend/tmp to use semantic units for testing
