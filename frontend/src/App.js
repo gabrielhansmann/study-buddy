@@ -1,16 +1,22 @@
+// src/App.js
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
+import Layout from "./components/Layout";
+import Dashboard from "./pages/Dashboard";
+import JobApplication from "./pages/JobApplication";
 import GetStarted from "./pages/GetStarted";
 import FormikExamplePage from "./pages/FormikExamplePage";
-import Dashboard from "./pages/Dashboard";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/get-started" element={<GetStarted />} />
-        <Route path="/formik-example-page" element={<FormikExamplePage />} />
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="job-application" element={<JobApplication />} />
+          <Route path="get-started" element={<GetStarted />} />
+          <Route path="formik-example-page" element={<FormikExamplePage />} />
+        </Route>
       </Routes>
     </Router>
   );
