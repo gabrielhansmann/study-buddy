@@ -9,6 +9,9 @@ import {
   ToggleButton,
   ButtonGroup,
   Button,
+  Modal,
+  Box,
+  Typography,
 } from "@mui/material";
 
 const locales = {
@@ -29,24 +32,28 @@ const events = [
     start: new Date(2025, 3, 21, 9, 0),
     end: new Date(2025, 3, 21, 10, 0),
     color: "#bfdbfe",
+    description: "Lecture on matrix theory and linear transformations.",
   },
   {
     title: "Computer Science",
     start: new Date(2025, 3, 23, 11, 0),
     end: new Date(2025, 3, 23, 12, 0),
     color: "#bfdbfe",
+    description: "Introduction to algorithms and data structures.",
   },
   {
     title: "Computer Science",
     start: new Date(2025, 3, 21, 13, 0),
     end: new Date(2025, 3, 21, 14, 0),
     color: "#bfdbfe",
+    description: "Continuation: recursion and trees.",
   },
   {
     title: "History",
     start: new Date(2025, 3, 23, 14, 0),
     end: new Date(2025, 3, 23, 15, 0),
     color: "#e5e7eb",
+    description: "The French Revolution.",
   },
 ];
 
@@ -80,9 +87,23 @@ const getFormattedDate = (date, view) => {
   }
 };
 
+const modalStyle = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  borderRadius: "12px",
+  boxShadow: 24,
+  p: 4,
+};
+
 export default function CalendarComponent() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [currentView, setCurrentView] = useState(Views.WEEK);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [open, setOpen] = useState(false);
 
   const handleViewChange = (event, newView) => {
     if (newView !== null) {
@@ -105,6 +126,16 @@ export default function CalendarComponent() {
     else if (currentView === Views.WEEK) prev.setDate(prev.getDate() - 7);
     else prev.setDate(prev.getDate() - 1);
     setCurrentDate(prev);
+  };
+
+  const handleSelectEvent = (event) => {
+    setSelectedEvent(event);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedEvent(null);
   };
 
   return (
@@ -167,7 +198,25 @@ export default function CalendarComponent() {
         date={currentDate}
         onNavigate={(newDate) => setCurrentDate(newDate)}
         dayLayoutAlgorithm="no-overlap"
+        onSelectEvent={handleSelectEvent}
       />
+
+      <Modal open={open} onClose={handleClose}>
+        <Box sx={modalStyle}>
+          <Typography variant="h6" component="h2">
+            {selectedEvent?.title}
+          </Typography>
+          <Typography sx={{ mt: 1 }}>
+            {selectedEvent?.description || "No description available."}
+          </Typography>
+          {selectedEvent?.start && selectedEvent?.end && (
+            <Typography sx={{ mt: 2, fontSize: "0.875rem", color: "gray" }}>
+              From {format(selectedEvent.start, "hh:mm a")} to{" "}
+              {format(selectedEvent.end, "hh:mm a")}
+            </Typography>
+          )}
+        </Box>
+      </Modal>
     </div>
   );
 }
