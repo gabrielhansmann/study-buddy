@@ -23,6 +23,86 @@ app.add_middleware(
 )
 
 
+class JobApplicationInput(BaseModel):
+    message: str
+
+
+@app.post("/job-application/")
+async def receive_job_application(data: JobApplicationInput):
+    print(f"Job application received: {data.message}")
+    await asyncio.sleep(5)
+
+    suggestions = [
+        {
+            "title": "Frontend Developer Praktikum im Bereich Computervisualistik und UX-Design",
+            "companies": ["SAP", "Bosch", "BMW Group", "andere Technologieunternehmen"],
+            "description": (
+                "Du arbeitest in einem interdisziplinären Team, das innovative Nutzeroberflächen "
+                "und visuelle Anwendungen entwickelt. Deine Kenntnisse in Frontend-Development "
+                "und Softwareergonomie helfen dir, intuitive und benutzerfreundliche Interfaces "
+                "zu gestalten. Dabei setzt du modernste Web-Technologien und Frameworks "
+                "(z.B. React, Angular oder Vue.js) ein."
+            ),
+            "reason": (
+                "Du hast exzellente Noten im Bereich Computervisualistik und Softwareergonomie "
+                "und großes Interesse an Frontend-Entwicklung. Dieses Praktikum bietet dir die "
+                "Möglichkeit, deine Fähigkeiten praxisnah einzusetzen und gleichzeitig kreative "
+                "Lösungen im Bereich UX/UI-Design zu erarbeiten."
+            ),
+        },
+        {
+            "title": "Frontend Engineer im Bereich Multimedia/Streaming",
+            "companies": [
+                "ZDF Digital",
+                "ProSiebenSat.1 Media SE",
+                "RTL Group",
+                "Netflix",
+                "Amazon Prime Video",
+            ],
+            "description": (
+                "Du entwickelst und optimierst Frontend-Anwendungen für Online-Streaming-Plattformen "
+                "oder Multimedia-Portale. Dabei arbeitest du in kleinen, agilen Teams an spannenden "
+                "Projekten rund um Serien, Filme und Medieninhalte. Du gestaltest aktiv die "
+                "Nutzererfahrung und hilfst, innovative Streaming-Lösungen umzusetzen."
+            ),
+            "reason": (
+                "Deine Freizeitinteressen (Serien und Filme) passen perfekt zur Tätigkeit bei einem "
+                "Medienunternehmen. Deine starken Fähigkeiten in der Frontend-Entwicklung und dein "
+                "Verständnis für Nutzerfreundlichkeit sind hier sehr gefragt. Außerdem kannst du dein "
+                "Interesse für visuelle Medien optimal mit deiner technischen Kompetenz verbinden."
+            ),
+        },
+        {
+            "title": "Praktikum im Bereich Innovation & Prototyping",
+            "companies": [
+                "Telekom TechBoost",
+                "Porsche Digital Lab",
+                "Hubraum",
+                "Fraunhofer-Institut",
+            ],
+            "description": (
+                "Du arbeitest in einem kleinen, dynamischen Team, das in kurzer Zeit innovative "
+                "Prototypen entwickelt. In einem kreativen Umfeld kannst du deine Frontend-Fähigkeiten "
+                "einsetzen, um schnell interaktive Prototypen zu realisieren, die auf Hackathons oder "
+                "Innovationsveranstaltungen präsentiert werden."
+            ),
+            "reason": (
+                "Du betonst, dass du gerne in kleinen Teams unter Zeitdruck arbeitest (z.B. in Hackathons). "
+                "Ein Innovationslabor bietet dir genau diese Arbeitsumgebung: Kreative Herausforderungen, "
+                "schnelle Entwicklung und Präsentation von Prototypen. Deine exzellenten Noten in Programmieren "
+                "und Modellieren sowie deine Begeisterung für visuelle Gestaltung und Frontend-Technologien "
+                "kommen hier optimal zum Einsatz."
+            ),
+        },
+    ]
+
+    return {
+        "message": "Thanks for your interest! Based on your input, here are some matching internships:",
+        "suggestions": suggestions,
+        "echo": data.message,
+    }
+
+
 @app.post("/get-started/")
 async def upload_data(university: str = Form(...), files: List[UploadFile] = File(...)):
     uploaded_files = []
@@ -35,7 +115,6 @@ async def upload_data(university: str = Form(...), files: List[UploadFile] = Fil
 
 UPLOAD_DIR = "tmp"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
-
 
 
 @app.post("/getstarted/pdf-geek/")
