@@ -37,10 +37,6 @@ UPLOAD_DIR = "tmp"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 
-@app.get("/health")
-async def health_check():
-    return {"status": "ok"}
-
 
 @app.post("/getstarted/pdf-geek/")
 async def pdf_receive(
