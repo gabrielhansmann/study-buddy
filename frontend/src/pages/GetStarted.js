@@ -29,13 +29,27 @@ const GetStarted = () => {
     },
     onSubmit: async (values) => {
       const formData = new FormData();
-      formData.append("university", values.university);
 
       if (values.files.length === 0) {
         alert("Bitte lade mindestens eine Datei hoch.");
         return;
       }
 
+      const nonPDFs = values.files.filter(
+        (file) => file.type !== "application/pdf"
+      );
+      if (nonPDFs.length > 0) {
+        alert("Only PDF-Files allowed.");
+        return;
+      }
+
+      const filenames = values.files.map((file) => file.name);
+      const metadata = JSON.stringify({
+        filenames,
+        university: values.university,
+      });
+
+      formData.append("metadata", metadata);
       values.files.forEach((file) => {
         formData.append("files", file);
       });
@@ -45,8 +59,9 @@ const GetStarted = () => {
 
       try {
         const API_URL = process.env.REACT_APP_API_URL;
+        console.log("API_URL:", API_URL);
 
-        const response = await fetch(`${API_URL}/get-started/`, {
+        const response = await fetch(`${API_URL}/getstarted/pdf-geek/`, {
           method: "POST",
           body: formData,
         });
@@ -134,6 +149,7 @@ const GetStarted = () => {
               onChange={handleFileChange}
               style={{ display: "none" }}
               id="upload-file"
+              accept="application/pdf"
             />
             <label htmlFor="upload-file">
               <Button component="span">Drag and drop or click to upload</Button>
