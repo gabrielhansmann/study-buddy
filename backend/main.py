@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile, Form, BackgroundTasks
+from fastapi import FastAPI, File, UploadFile, Form, BackgroundTasks, Depends
 from fastapi.responses import JSONResponse
 from typing import List
 from pydantic import BaseModel
@@ -14,33 +14,28 @@ app = FastAPI()
 UPLOAD_DIR = "tmp"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
-class UploadPayload(BaseModel):
-    metadata: str = Form(...)
-    files: List[UploadFile] = File(...)
-
-
 @app.get("/health")
 async def health_check():
     return {"status": "ok"}
 
 @app.post("/getstarted/pdf-geek/")
-async def pdf_receive(payload: UploadPayload, background_process: BackgroundTasks):
+async def pdf_receive(background_process: BackgroundTasks, metadata: str = Form(...), files: List[UploadFile] = File(...)):
     try:
         # JSON-String zu Python-Dict konvertieren
-        metadata_dict = json.loads(payload.metadata)
+        metadata_dict = json.loads(metadata)
         filenames = metadata_dict.get("filenames", [])
 
-        if len(filenames) != len(payload.files):
+        if len(filenames) != len(files):
             return JSONResponse(
                 status_code=400,
                 content={
-                    "error": "Anzahl der Dateinamen stimmt nicht mit der Anzahl der Dateien überein."
+                    "error": "Anzahl der Dateinamen stimmt nicht mit der Anzahl der Dateien uberein."
                 },
             )
 
         saved_files = []
 
-        for i, file in enumerate(payload.files):
+        for i, file in enumerate(files):
             if file.content_type != "application/pdf":
                 return JSONResponse(
                     status_code=400,
@@ -62,7 +57,7 @@ async def pdf_receive(payload: UploadPayload, background_process: BackgroundTask
 
     except json.JSONDecodeError:
         return JSONResponse(
-            status_code=400, content={"error": "Ungültiges JSON im Feld 'metadata'."}
+            status_code=400, content={"error": "Ungultiges JSON im Feld 'metadata'."}
         )
 
 
