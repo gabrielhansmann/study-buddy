@@ -1,5 +1,5 @@
-import "./App.css";
-import CalendarComponent from "./CalendarComponent";
+import "../App.css";
+import CalendarComponent from "../components/CalendarComponent";
 
 function Dashboard() {
   return (

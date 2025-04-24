@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import GetStarted from "./pages/GetStarted";
 import FormikExamplePage from "./pages/FormikExamplePage";
-import Dashboard from "../pages/Dashboard";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   return (
