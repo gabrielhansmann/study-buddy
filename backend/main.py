@@ -1,8 +1,10 @@
 from fastapi import FastAPI, File, UploadFile, Form, BackgroundTasks
 from fastapi.responses import JSONResponse
 from typing import List
+from pydantic import BaseModel
 import json
 import os
+from form_recognition import process_upload
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -52,7 +54,6 @@ async def pdf_receive(payload: UploadPayload, background_process: BackgroundTask
                 f.write(await file.read())
 
             saved_files.append(new_filename)
-            from form_recognition import process_upload
         background_process.add_task(process_upload, saved_files)
         return {
             "message": "Upload erfolgreich!",
